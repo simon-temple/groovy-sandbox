@@ -1,0 +1,26 @@
+import groovy.xml.MarkupBuilder
+
+class MyClass {
+
+  public  int  Idontdomuch (int foo) {
+    System.exit(0);
+    return 42;
+  }
+
+}
+
+def clz = new MyClass();
+clz.Idontdomuch(1);
+
+System.getProperty('java.version')
+
+System.with {
+    exit(0)
+}
+
+new MarkupBuilder().root {
+   a( a1:'one' ) {
+     b { mkp.yield( '3 < 5' ) }
+     c( a2:'two', 'blah' )
+   }
+}
