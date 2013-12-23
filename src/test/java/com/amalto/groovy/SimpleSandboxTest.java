@@ -2,6 +2,7 @@ package com.amalto.groovy;
 
 import com.amalto.groovy.annotations.ScriptScanner;
 import com.amalto.groovy.interception.InterceptorRegistry;
+import com.amalto.groovy.interception.SandboxSecurityException;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
@@ -34,19 +35,23 @@ public class SimpleSandboxTest {
 
         // Compile
         Script parsedScript = shell.parse( cs );
-        // and run...
-        parsedScript.run();
-
+        try {
+            // and run...
+            parsedScript.run();
+        } catch ( Exception e ) {
+            if ( e instanceof SandboxSecurityException ) {
+                System.out.println( e.getMessage() );
+            } else {
+                throw e;
+            }
+        }
     }
 
     @Test
     public void runScriptOne() throws Exception {
 
-        // The name of my script
-        String scriptName = "MyScript.groovy";
-
         // Register a validator - using regex or explicit script name above
-        InterceptorRegistry.getInstance().register( ".*.groovy", new TestValidator() );
+        InterceptorRegistry.getInstance().register( ".*.groovy", new IgnoreValidator() );
 
         // Add the custom scanning AST transformation
         CompilerConfiguration config = new CompilerConfiguration( CompilerConfiguration.DEFAULT );
@@ -55,7 +60,7 @@ public class SimpleSandboxTest {
         // Load the script text
         GroovyShell shell = new GroovyShell( config );
         String theScript = FileUtils.readFileToString( new File( "src/test/resources/GroovyScript1.txt" ) );
-        GroovyCodeSource cs = new GroovyCodeSource( theScript, scriptName, "/groovy/sandbox" );
+        GroovyCodeSource cs = new GroovyCodeSource( theScript, "MyScript1.groovy", "/groovy/sandbox" );
 
         System.out.println( "COMPILE." );
 
@@ -80,7 +85,7 @@ public class SimpleSandboxTest {
         // Load the script text
         GroovyShell shell = new GroovyShell( config );
         String theScript = FileUtils.readFileToString( new File( "src/test/resources/GroovyScript2.txt" ) );
-        GroovyCodeSource cs = new GroovyCodeSource( theScript, "test2.groovy", "/groovy/sandbox" );
+        GroovyCodeSource cs = new GroovyCodeSource( theScript, "MyScript1.groovy", "/groovy/sandbox" );
 
         shell.parse( cs ).run();
 

@@ -9,7 +9,7 @@ public class IgnoreValidator implements InterceptorValidator {
     private final static Logger LOG = Logger.getLogger( IgnoreValidator.class );
 
     @Override
-    public boolean canInvoke( String sourceName, int lineNumber, String className, String methodName ) throws SandboxSecurityException {
+    public boolean canInvoke( String sourceName, int lineNumber, String className, String methodName, boolean isGroovyObject ) throws SandboxSecurityException {
 
         if ( className.equals( "java.lang.ProcessBuilder" ) ) {
             LOG.warn( "Use of the ProcessBuilder class not allowed at line: " + lineNumber + ". Method Ignored!" );
@@ -51,7 +51,7 @@ public class IgnoreValidator implements InterceptorValidator {
             return false;
         }
 
-        if ( methodName.equals( "evaluate" ) ) {
+        if ( methodName.equals( "evaluate" ) && ( isGroovyObject || className.equals( "groovy.lang.GroovyShell" ) )) {
             LOG.warn( "Any evaluate() method not allowed at line: " + lineNumber + ". Method Ignored!" );
             return false;
         }

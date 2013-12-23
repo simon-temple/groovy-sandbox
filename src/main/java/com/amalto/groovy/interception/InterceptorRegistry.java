@@ -1,6 +1,5 @@
 package com.amalto.groovy.interception;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,17 +23,17 @@ public class InterceptorRegistry {
         return registry.remove( sourceMatch );
     }
 
-    public boolean isValid( String sourceName, int lineNumber, String className, String methodName ) throws SandboxSecurityException {
+    public boolean isValid( String sourceName, int lineNumber, String className, String methodName, boolean isGroovyObject ) throws SandboxSecurityException {
         boolean ret = true;
         InterceptorValidator validator = registry.get( sourceName );
         if ( null != validator ) {
             // Direct match
-            ret = validator.canInvoke( sourceName, lineNumber, className, methodName );
+            ret = validator.canInvoke( sourceName, lineNumber, className, methodName, isGroovyObject );
         } else {
             // Try regex matches
             for ( Map.Entry<String, InterceptorValidator> ent : this.registry.entrySet() ) {
                 if ( sourceName.matches( ent.getKey() ) ) {
-                    ret = ent.getValue().canInvoke( sourceName, lineNumber, className, methodName );
+                    ret = ent.getValue().canInvoke( sourceName, lineNumber, className, methodName, isGroovyObject );
                     break;
                 }
             }

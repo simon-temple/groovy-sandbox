@@ -1,33 +1,27 @@
 // Many ways to call exit()?
 
-System.exit(0)
+// From: https://github.com/groovy/groovy-core/blob/master/src/examples/groovyShell/BlacklistingShellTest.groovy
 
-Eval.me("System.exit(0)")
-
-evaluate("System.exit(0)")
-
-(new GroovyShell()).evaluate("System.exit(0)")
-
+def c = System.class; c.forName("java.lang.System").exit(0)
 Class.forName("java.lang.System").exit(0)
-
-// ** Disallowed at compile time **
-//System.&exit.call(0)
-
+System.exit(0)
+def e = System.&exit; e.call(0)
+System.&exit.call(0)
+System.getMetaClass().invokeMethod("exit",0)
+evaluate("System.exit(0)")
+(new GroovyShell()).evaluate("System.exit(0)")
+def sh = new GroovyShell(); sh.evaluate("System.exit(0)")
+Eval.me("System.exit(0)")
 def s = System; s.exit(0)
-
 Script t = this; t.evaluate("System.exit(0)")
 
-def sx = "exit"; System."$sx"(0)
+// And more...
 
+def sx = "exit"; System."$sx"(0)
 def MyExit = {
   Class.forName("java.lang.System").exit(0)
 }
-
 MyExit()
-
 (new ProcessBuilder("kill", "-1")).start()
-
 Runtime.getRuntime().exit(0)
-
 Shutdown.exit(0)
-

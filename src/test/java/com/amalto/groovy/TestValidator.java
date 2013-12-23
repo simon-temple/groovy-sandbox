@@ -6,7 +6,7 @@ import com.amalto.groovy.interception.SandboxSecurityException;
 public class TestValidator implements InterceptorValidator {
 
     @Override
-    public boolean canInvoke( String sourceName, int lineNumber, String className, String methodName ) throws SandboxSecurityException {
+    public boolean canInvoke( String sourceName, int lineNumber, String className, String methodName, boolean isGroovyObject ) throws SandboxSecurityException {
 
         if ( className.equals( "java.lang.ProcessBuilder" ) ) {
             throw new SandboxSecurityException( "Use of the ProcessBuilder class not allowed at line: " + lineNumber );

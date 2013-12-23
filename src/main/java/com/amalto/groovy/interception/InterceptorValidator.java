@@ -9,8 +9,9 @@ public interface InterceptorValidator {
      * @param lineNumber The line number
      * @param className The class name
      * @param methodName  the method name
+     * @param isGroovyObject true if the target is a Groovy object
      * @return true to allow invocation else false to skip the execution of this method
      * @throws SandboxSecurityException Use to break the execution of the script
      */
-    public boolean canInvoke( String sourceName, int lineNumber, String className, String methodName ) throws SandboxSecurityException ;
+    public boolean canInvoke( final String sourceName, final int lineNumber, final String className, final String methodName, final boolean isGroovyObject ) throws SandboxSecurityException ;
 }

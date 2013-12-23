@@ -104,10 +104,4 @@ public class ScriptScanningVisitor extends ClassCodeVisitorSupport {
         return this.src;
     }
 
-    @Override
-    public void visitMethodPointerExpression( MethodPointerExpression expression ) {
-
-        throw new RuntimeException( "Method pointers not allowed!" );
-    }
-
 }
